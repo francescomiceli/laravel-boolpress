@@ -16,6 +16,9 @@
     <label for="category_id">Category:</label>
         <select name="category_id" id="">
 
+            <option value="" @if ($post->category_id == null) selected @endif>Non definita
+            </option>
+
             @foreach ($categories as $category )
             <option value="{{$category->id}}".@if ($post->category_id = !null) {{ $category->id == old('category_id', $post->category->id) ? 'selected' : '' }} @endif >{{$category->name}}</option>
             @endforeach
