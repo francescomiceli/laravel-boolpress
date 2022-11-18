@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Category;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
+
+
+
 
 class CategoryController extends Controller
 {
@@ -14,7 +19,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::All();
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**
@@ -24,7 +30,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.categories.create');
     }
 
     /**
@@ -35,7 +41,23 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data_category = $request->all();
+        $newcategory = new Category();
+        $newcategory->fill($data_category);
+
+        $slug = Str::slug($newcategory->name);
+        $slug_base = $slug;
+        $existingslug = Category::where('slug', $slug)->first();
+        $counter = 1;
+        while ($existingslug) {
+            $slug = $slug_base . '_' . $counter;
+            $existingslug = Category::where('slug', $slug)->first();
+            $counter++;
+        }
+        $newcategory->slug = $slug;
+        $newcategory->save();
+
+        return redirect()->route('admin.categories.index');
     }
 
     /**
@@ -80,6 +102,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route('admin.categories.index');
     }
 }

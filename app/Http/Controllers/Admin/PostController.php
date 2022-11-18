@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts=Post::All();
+        $posts = Post::All();
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -28,8 +29,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        $categories=Category::All();
-        return view('admin.posts.create', compact('categories'));
+        $categories = Category::All();
+        $tags = Tag::All();
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -38,7 +40,7 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request , Post $post)
+    public function store(Request $request, Post $post)
     {
         $datas = $request->all();
         $newpost = new Post();
@@ -54,8 +56,11 @@ class PostController extends Controller
         }
         $newpost->slug = $slug;
         $newpost->save();
-        return redirect()->route('admin.posts.index');
+        if (array_key_exists('tags', $datas)) {
+            $newpost->tags()->sync($datas['tags']);
+        }
 
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -77,11 +82,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        $categories=Category::All();
-        $tags=Tag::All();
+        $categories = Category::All();
+        $tags = Tag::All();
         return view('admin.posts.edit', compact('post', 'categories', 'tags'));
-
-
     }
 
     /**
@@ -91,13 +94,15 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, Post $post)
     {
         $postupdate = $request->all();
-        if(array_key_exists('tags', $postupdate)){
+        if (array_key_exists('tags', $postupdate)) {
             $post->tags()->sync($postupdate['tags']);
-        }else{
-            $post->tags()->sync([]);        }
+        } else {
+            $post->tags()->sync([]);
+        }
         $post->update($postupdate);
         $slug = Str::slug($post->title);
         $slug_base = $slug;
@@ -111,8 +116,8 @@ class PostController extends Controller
         $post->slug = $slug;
         $post->save();
         return redirect()->route('admin.posts.index');
-
     }
+
 
     /**
      * Remove the specified resource from storage.
