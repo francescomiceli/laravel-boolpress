@@ -15,6 +15,14 @@
                         <input type="submit" class="btn btn-warning" value="Aggiorna">
                     </div>
 
+    <label for="category_id">Category:</label>
+        <select name="category_id" id="">
+
+            @foreach ($categories as $category )
+            <option value="{{$category->id}}".@if ($post->category_id = !null) {{ $category->id == old('category_id', $post->category->id) ? 'selected' : '' }} @endif >{{$category->name}}</option>
+            @endforeach
+        </select>
+
     </form>
 
 
