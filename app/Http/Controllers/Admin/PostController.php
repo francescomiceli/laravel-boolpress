@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Category;
+
 class PostController extends Controller
 {
     /**
@@ -25,7 +27,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories=Category::All();
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -34,7 +37,7 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Post $post)
+    public function store(Request $request , Post $post)
     {
         $datas = $request->all();
         $newpost = new Post();
@@ -51,6 +54,7 @@ class PostController extends Controller
         $newpost->slug = $slug;
         $newpost->save();
         return redirect()->route('admin.posts.index');
+
     }
 
     /**
@@ -73,6 +77,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         return view('admin.posts.edit', compact('post'));
+
     }
 
     /**
@@ -98,6 +103,7 @@ class PostController extends Controller
         $post->slug = $slug;
         $post->save();
         return redirect()->route('admin.posts.index');
+
     }
 
     /**
