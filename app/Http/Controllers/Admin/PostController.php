@@ -6,6 +6,7 @@ use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Category;
+use App\Tag;
 
 class PostController extends Controller
 {
@@ -93,6 +94,10 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         $postupdate = $request->all();
+        if(array_key_exists('tags', $postupdate)){
+            $post->tags()->sync($postupdate['tags']);
+        }else{
+            $post->tags()->sync([]);        }
         $post->update($postupdate);
         $slug = Str::slug($post->title);
         $slug_base = $slug;
