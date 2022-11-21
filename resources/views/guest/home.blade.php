@@ -9,6 +9,8 @@
     <title>Home</title>
 </head>
 <body>
- <div id="root"></div>
+ <div id="root">
+
+ </div>
 </body>
 </html>

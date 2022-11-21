@@ -1,13 +1,17 @@
 <template>
-  <div>App vue</div>
-</template>
+    <div>
+        ciao
+      <ListComponent />
+    </div>
+  </template>
 
-<script>
-export default {
-    name:'App',
-}
-</script>
+  <script>
 
-<style>
+  import ListComponent from '../components/ListComponent.vue'
 
-</style>
+  export default {
+      name:'App',
+      components: {
+          ListComponent
+      }
+  }

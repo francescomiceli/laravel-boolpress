@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('admin.home');
+    return view('guest.home');
 })->name('index');
 
 Auth::routes();
